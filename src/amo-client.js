@@ -117,7 +117,7 @@ export class Client {
         if (response.error) {
           this.logger.error(`Server response: ${response.error}`,
                             `(status: ${httpResponse.statusCode})`);
-          return {success: false};
+          return {success: false, reason: 'bad_http_response', error: response.error, statusCode: httpResponse.statusCode};
         }
 
         throw new Error(
@@ -188,7 +188,7 @@ export class Client {
                 "Your add-on has been submitted for review. It passed " +
                 "validation but could not be automatically signed " +
                 "because this is a listed add-on.");
-              return resolve({success: false});
+              return resolve({success: false, reason: 'listed_not_auto_signed', validationUrl: data.validation_url});
             } else if (signedAndReady) {
               // TODO: show some validation warnings if there are any.
               // We should show things like "missing update URL in install.rdf"
@@ -203,7 +203,7 @@ export class Client {
             } else {
               this.logger.log(
                 "Your add-on failed validation and could not be signed");
-              return resolve({success: false});
+              return resolve({success: false, reason: 'validation_failed', validationUrl: data.validation_url, originalResponse: data});
             }
 
           } else {
