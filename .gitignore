@@ -8,4 +8,4 @@
 # Build artifacts.
 npm-debug.log
 node_modules
-dist/*
+#dist/*
